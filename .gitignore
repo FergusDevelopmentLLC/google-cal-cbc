@@ -1,3 +1,5 @@
 node_modules/
 knexfile.js
 *.lock
+client_secret_mg.json
+client_secret.json
