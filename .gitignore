@@ -4,3 +4,4 @@ knexfile.js
 package-lock.json
 client_secret_mg.json
 client_secret.json
+controllers/client_secret.json

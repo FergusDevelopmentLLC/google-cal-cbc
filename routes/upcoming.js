@@ -3,7 +3,7 @@ const UpcomingController = require('../controllers/upcoming');
 const { validateParam, validateBody, schemas } = require('../helpers/routeHelpers');
 
 router.route('/')
-  .get(UpcomingController.getUpcommingMeetups);
+  .get(UpcomingController.getUpcomingMeetups);
 
 router.route('/calendars')
   .get(UpcomingController.getCalendars);
