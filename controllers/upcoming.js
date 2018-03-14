@@ -9,36 +9,36 @@ const googleAuth = require('google-auth-library');
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||process.env.USERPROFILE) + '/.credentials/';
+var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
 
 module.exports = {
 
   getUpcommingMeetups: async (req, res, next) => {
     var meetups = {};
-    ical.fromURL('http://api.meetup.com/Ethereum-Boulder/upcoming.ical', {}, function(err, ebData) {
+    ical.fromURL('http://api.meetup.com/Ethereum-Boulder/upcoming.ical', {}, function (err, ebData) {
       meetups['Ethereum-Boulder'] = getNextEventFor(ebData);
-      ical.fromURL('http://api.meetup.com/Boulder-Blockchain/upcoming.ical', {}, function(err, bbdata) {
+      ical.fromURL('http://api.meetup.com/Boulder-Blockchain/upcoming.ical', {}, function (err, bbdata) {
         meetups['Boulder-Blockchain'] = getNextEventFor(bbdata);
-        ical.fromURL('http://api.meetup.com/Colorado-Government-Blockchain-Professionals/upcoming.ical', {}, function(err, cbpdata) {
+        ical.fromURL('http://api.meetup.com/Colorado-Government-Blockchain-Professionals/upcoming.ical', {}, function (err, cbpdata) {
           meetups['Colorado-Government-Blockchain-Professionals'] = getNextEventFor(cbpdata);
-          ical.fromURL('http://api.meetup.com/Hyperledger-Denver/upcoming.ical', {}, function(err, hdata) {
+          ical.fromURL('http://api.meetup.com/Hyperledger-Denver/upcoming.ical', {}, function (err, hdata) {
             meetups['Hyperledger-Denver'] = getNextEventFor(hdata);
-            ical.fromURL('http://api.meetup.com/Women-in-BlockChain-MeetUp/upcoming.ical', {}, function(err, wibcdata) {
+            ical.fromURL('http://api.meetup.com/Women-in-BlockChain-MeetUp/upcoming.ical', {}, function (err, wibcdata) {
               meetups['Women-in-BlockChain-MeetUp'] = getNextEventFor(wibcdata);
-              ical.fromURL('http://api.meetup.com/Bitcoin-and-Beer/upcoming.ical', {}, function(err, babdata) {
+              ical.fromURL('http://api.meetup.com/Bitcoin-and-Beer/upcoming.ical', {}, function (err, babdata) {
                 meetups['Bitcoin-and-Beer'] = getNextEventFor(babdata);
-                ical.fromURL('http://api.meetup.com/Colorado-Springs-Blockchain-Crypto-Entrepreneurs/upcoming.ical', {}, function(err, csbcedata) {
+                ical.fromURL('http://api.meetup.com/Colorado-Springs-Blockchain-Crypto-Entrepreneurs/upcoming.ical', {}, function (err, csbcedata) {
                   meetups['Colorado-Springs-Blockchain-Crypto-Entrepreneurs'] = getNextEventFor(csbcedata);
-                  ical.fromURL('http://api.meetup.com/Denver-Crypto-Group/upcoming.ical', {}, function(err, dcgdata) {
+                  ical.fromURL('http://api.meetup.com/Denver-Crypto-Group/upcoming.ical', {}, function (err, dcgdata) {
                     meetups['Denver-Crypto-Group'] = getNextEventFor(dcgdata);
-                    ical.fromURL('http://api.meetup.com/Colorado-Springs-Blockchain-Crypto-Entrepreneurs/upcoming.ical', {}, function(err, csbcedata) {
+                    ical.fromURL('http://api.meetup.com/Colorado-Springs-Blockchain-Crypto-Entrepreneurs/upcoming.ical', {}, function (err, csbcedata) {
                       meetups['Colorado-Springs-Blockchain-Crypto-Entrepreneurs'] = getNextEventFor(csbcedata);
-                      ical.fromURL('http://api.meetup.com/Ethereum-Denver/upcoming.ical', {}, function(err, ededata) {
+                      ical.fromURL('http://api.meetup.com/Ethereum-Denver/upcoming.ical', {}, function (err, ededata) {
                         meetups['Ethereum-Denver'] = getNextEventFor(ededata);
-                        ical.fromURL('http://api.meetup.com/rmbchain/upcoming.ical', {}, function(err, rmbdata) {
+                        ical.fromURL('http://api.meetup.com/rmbchain/upcoming.ical', {}, function (err, rmbdata) {
                           meetups['rmbchain'] = getNextEventFor(rmbdata);
-                          ical.fromURL('http://api.meetup.com/Denver-Blockchain-Maximalists/upcoming.ical', {}, function(err, dbmData) {
+                          ical.fromURL('http://api.meetup.com/Denver-Blockchain-Maximalists/upcoming.ical', {}, function (err, dbmData) {
                             meetups['Denver-Blockchain-Maximalists'] = getNextEventFor(dbmData);
                             res.status(200).json(meetups);
                           });
@@ -60,18 +60,18 @@ module.exports = {
         console.log('Error loading client secret file: ' + err);
         return;
       }
-      authorize(JSON.parse(content), function(auth){
+      authorize(JSON.parse(content), function (auth) {
         var calendar = google.calendar('v3');
-        calendar.calendarList.list({ auth: auth }, function(err, resp) {
-            var calendars = [];
-            for (cal in resp.items) {
-              if(resp.items[cal].summary.includes("Events - ")) {
-                calendars.push(resp.items[cal]);
-              }
+        calendar.calendarList.list({ auth: auth }, function (err, resp) {
+          var calendars = [];
+          for (cal in resp.items) {
+            if (resp.items[cal].summary.includes("Events - ")) {
+              calendars.push(resp.items[cal]);
             }
-            res.status(200).json(calendars);
-          });
-        }
+          }
+          res.status(200).json(calendars);
+        });
+      }
       );
     });
   }
@@ -79,11 +79,11 @@ module.exports = {
 
 function getNextEventFor(data) {
   var i = 0;
-  for (var k in data){
+  for (var k in data) {
     if (data.hasOwnProperty(k)) {
       var ev = data[k]
-      if(ev.type == 'VEVENT') {
-        if(i < 1) { return ev; }
+      if (ev.type == 'VEVENT') {
+        if (i < 1) { return ev; }
         i++;
       }
     }
@@ -106,7 +106,7 @@ function authorize(credentials, callback) {
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, function(err, token) {
+  fs.readFile(TOKEN_PATH, function (err, token) {
     if (err) {
       getNewToken(oauth2Client, callback);
     } else {
@@ -134,9 +134,9 @@ function getNewToken(oauth2Client, callback) {
     input: process.stdin,
     output: process.stdout
   });
-  rl.question('Enter the code from that page here: ', function(code) {
+  rl.question('Enter the code from that page here: ', function (code) {
     rl.close();
-    oauth2Client.getToken(code, function(err, token) {
+    oauth2Client.getToken(code, function (err, token) {
       if (err) {
         console.log('Error while trying to retrieve access token', err);
         return;
@@ -169,7 +169,7 @@ function getCalendars(auth) {
   console.log(google);
 
   var calendar = google.calendar('v3');
-  calendar.calendarList.list({ auth: auth }, function(err, resp) {
+  calendar.calendarList.list({ auth: auth }, function (err, resp) {
     //console.log(resp.items.length);
     return resp;
     // for(cal in resp.items) {
@@ -187,29 +187,29 @@ function listEvents(auth) {
   var calendar = google.calendar('v3');
 
   calendarId: 'primary',
-  calendar.events.list({
-    auth: auth,
-    calendarId: '7fj90qn3gui2ldv39vgm69bl92k0552m@import.calendar.google.com',
-    timeMin: (new Date()).toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: 'startTime'
-  }, function(err, response) {
-    if (err) {
-      console.log('The API returned an error: ' + err);
-      return;
-    }
-    var events = response.items;
-    if (events.length == 0) {
-      console.log('No upcoming events found.');
-    } else {
-      console.log('Upcoming 10 events:');
-      for (var i = 0; i < events.length; i++) {
-        var event = events[i];
-        //console.log(event);
-        var start = event.start.dateTime || event.start.date;
-        console.log('%s - %s', start, event.summary);
+    calendar.events.list({
+      auth: auth,
+      calendarId: '7fj90qn3gui2ldv39vgm69bl92k0552m@import.calendar.google.com',
+      timeMin: (new Date()).toISOString(),
+      maxResults: 10,
+      singleEvents: true,
+      orderBy: 'startTime'
+    }, function (err, response) {
+      if (err) {
+        console.log('The API returned an error: ' + err);
+        return;
       }
-    }
-  });
+      var events = response.items;
+      if (events.length == 0) {
+        console.log('No upcoming events found.');
+      } else {
+        console.log('Upcoming 10 events:');
+        for (var i = 0; i < events.length; i++) {
+          var event = events[i];
+          //console.log(event);
+          var start = event.start.dateTime || event.start.date;
+          console.log('%s - %s', start, event.summary);
+        }
+      }
+    });
 }
